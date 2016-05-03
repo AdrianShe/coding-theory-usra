@@ -1,2 +1,3 @@
 # coding-theory-usra
-# coding-theory-usra
+
+Code snippets for project
