@@ -17,48 +17,6 @@ For information about changes from previous versions, type 'news'.
 Number of 3 x n matrices with no adjacent ones in rows or columns 
 count =
 
-   5.0000e+00
-   1.7000e+01
-   6.3000e+01
-   2.2700e+02
-   8.2700e+02
-   2.9990e+03
-   1.0897e+04
-   3.9561e+04
-   1.4368e+05
-   5.2172e+05
-   1.8946e+06
-   6.8800e+06
-   2.4984e+07
-   9.0726e+07
-   3.2946e+08
-   1.1964e+09
-   4.3446e+09
-   1.5777e+10
-   5.7292e+10
-   2.0805e+11
-
-Estimate of Theoretical Capacity 
-Emperical Capacity 
-GNU Octave, version 3.8.1
-Copyright (C) 2014 John W. Eaton and others.
-This is free software; see the source code for copying conditions.
-There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  For details, type 'warranty'.
-
-Octave was configured for "x86_64-pc-linux-gnu".
-
-Additional information about Octave is available at http://www.octave.org.
-
-Please contribute if you find this software useful.
-For more information, visit http://www.octave.org/get-involved.html
-
-Read http://www.octave.org/bugs.html to learn how to submit bug reports.
-For information about changes from previous versions, type 'news'.
-
-Number of 3 x n matrices with no adjacent ones in rows or columns 
-count =
-
               5
              17
              63
