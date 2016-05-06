@@ -8,7 +8,7 @@ roots(t2)(1)
 
 %% Transfer matrix T4
 printf('Roots of T4 \n');
-t4 = [-1 4 36 -105 15 64 -20 -4 1];
+t4 = [-1 4 36 0 -105 15 64 -20 -4 1];
 roots(t4)(1)
 polyout(t4)
 
