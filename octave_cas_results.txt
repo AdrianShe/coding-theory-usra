@@ -1,0 +1,56 @@
+GNU Octave, version 3.8.1
+Copyright (C) 2014 John W. Eaton and others.
+This is free software; see the source code for copying conditions.
+There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  For details, type 'warranty'.
+
+Octave was configured for "x86_64-pc-linux-gnu".
+
+Additional information about Octave is available at http://www.octave.org.
+
+Please contribute if you find this software useful.
+For more information, visit http://www.octave.org/get-involved.html
+
+Read http://www.octave.org/bugs.html to learn how to submit bug reports.
+For information about changes from previous versions, type 'news'.
+
+T =
+
+   1   1   1   1   1
+   1   0   1   1   0
+   1   1   0   1   1
+   1   1   1   0   0
+   1   0   1   0   0
+
+OctSymPy v2.3.0: this is free software without warranty, see source.
+Initializing communication with SymPy using a popen2() pipe.
+Some output from the Python subprocess (pid 8824) might appear next.
+
+OctSymPy: Communication established.  SymPy v0.7.5.
+Generating the generating function 
+ans = 0
+Waiting......
+Waiting.....
+Waiting....
+Waiting....
+Waiting....
+Waiting.......................
+gen_function = (sym)
+
+     3    2          
+  - x  - x  + 7⋅x + 5
+  ───────────────────
+   4      2          
+  x  - 6⋅x  - 2⋅x + 1
+
+Creating first few terms of the power series 
+ans =
+
+ Columns 1 through 8:
+
+        5       17       63      227      827     2999    10897    39561
+
+ Column 9:
+
+   143677
+
