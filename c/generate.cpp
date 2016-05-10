@@ -43,10 +43,10 @@ std::vector<long> generate_sequences(int length) {
     return temp[length];
 }
 
-Eigen::MatrixXf generate_matrix(int length) {
+Eigen::MatrixXd generate_matrix(int length) {
     std::vector<long> sequences = generate_sequences(length);
     int size = sequences.size();
-    Eigen::MatrixXf transfer(size, size);
+    Eigen::MatrixXd transfer(size, size);
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) { 
              transfer(i,j) = !(sequences[i] & sequences[j]);
@@ -56,10 +56,10 @@ Eigen::MatrixXf generate_matrix(int length) {
     return transfer;
 }
 
-Eigen::MatrixXf generate_matrix_new(int length) {
+Eigen::MatrixXd generate_matrix_new(int length) {
     std::vector<long> sequences = generate_sequences(length);
     int size = sequences.size();
-    Eigen::MatrixXf transfer(size, size);
+    Eigen::MatrixXd transfer(size, size);
     for (int i = 0; i < size; i++) {
         for (int j = i; j < size; j++) { 
              int val = !(sequences[i] & sequences[j]);
@@ -71,14 +71,14 @@ Eigen::MatrixXf generate_matrix_new(int length) {
     return transfer;
 }
 
-double transfer_eigenvalue(Eigen::MatrixXf matrix) {
+double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     // Naive implementation of the power method
-    Eigen::VectorXf evec(matrix.rows()); 
+    Eigen::VectorXd evec(matrix.rows()); 
     evec.fill(1); 
     
     double eigen_guess;
     for (int i = 1; i < 1000; i++) {
-        Eigen::VectorXf new_vec = matrix * evec;
+        Eigen::VectorXd new_vec = matrix * evec;
         new_vec.normalize();
         evec = new_vec;
         // cout << evec << endl;
@@ -90,15 +90,15 @@ double transfer_eigenvalue(Eigen::MatrixXf matrix) {
 
 int main(int argc, char* argv[]) {
 //    clock_t t = clock();
-//    generate_matrix(atoi(argv[1]));
+    generate_matrix(atoi(argv[1]));
  //   t = clock() - t;
   //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
 
    // clock_t t_new = clock();
-   // generate_matrix_new(atoi(argv[1]));
+    generate_matrix_new(atoi(argv[1]));
    // t_new = clock() - t_new;
     //cout << (float) t_new/ CLOCKS_PER_SEC << " seconds" << endl; 
     double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
-    cout << setprecision(16) << eig << endl;
+   cout << setprecision(16) << eig << endl;
 }
 

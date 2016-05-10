@@ -9,19 +9,19 @@
 
 using namespace std;
 using namespace Eigen;
-
+/*
 int main(int argc, char* argv[]) {
     int p = atoi(argv[1]);
     int q = atoi(argv[2]);
 
-    MatrixXf T_p = generate_matrix(p + 2 * q + 1); 
-    MatrixXf T_q = generate_matrix(2 * q + 1);
+    MatrixXd T_p = generate_matrix(p + 2 * q + 1); 
+    MatrixXd T_q = generate_matrix(2 * q + 1);
 
-    // cout << T_p << endl;
-    // cout << T_q << endl;
+     cout << T_p << endl;
+     cout << T_q << endl;
 
-    Eigen::SelfAdjointEigenSolver<MatrixXf> ep(T_p);
-    Eigen::SelfAdjointEigenSolver<MatrixXf> eq(T_q);
+    Eigen::SelfAdjointEigenSolver<MatrixXd> ep(T_p);
+    Eigen::SelfAdjointEigenSolver<MatrixXd> eq(T_q);
 
     int index_p = fib(p + 2 * q + 3) - 1;
     int index_q = fib(2 * q + 3) - 1;
@@ -38,3 +38,5 @@ int main(int argc, char* argv[]) {
     double bound = pow(dp / dq, 1.0 / p);
     cout << "The bound is " << bound  << endl;
 }
+*/ 
+

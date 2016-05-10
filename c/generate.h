@@ -5,7 +5,7 @@
 #include "time.h"
 
 std::vector<long> generate_sequences(int length);
-Eigen::MatrixXf generate_matrix(int length);
-Eigen::MatrixXf generate_matrix_new(int length);
-double transfer_eigenvalue(Eigen::MatrixXf matrix);
+Eigen::MatrixXd generate_matrix(int length);
+Eigen::MatrixXd generate_matrix_new(int length);
+double transfer_eigenvalue(Eigen::MatrixXd matrix);
 #endif 
