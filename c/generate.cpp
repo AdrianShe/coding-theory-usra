@@ -6,6 +6,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>
+#include <limits>
+
 
 using namespace std;
 using namespace Eigen;
@@ -73,21 +75,56 @@ Eigen::MatrixXd generate_matrix_new(int length) {
 
 double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     // Naive implementation of the power method
-    Eigen::VectorXd evec(matrix.rows()); 
+    int rows = matrix.rows();
+    Eigen::VectorXd evec(rows); 
     evec.fill(1); 
+    Eigen::VectorXd new_vec = matrix * evec;
+    double eigen_upper;
+    double old_eigen;
+    double sample = (double) new_vec(1) / evec(1);
+ 
+    eigen_upper = (double) new_vec(0) / evec(0);
+
+    for (int i = 1; i < rows; i ++){
+        sample = (double) new_vec(i) / evec(i);
+        if (sample > eigen_upper)
+            eigen_upper = sample;
+    }
     
-    double eigen_guess;
-    for (int i = 1; i < 1000; i++) {
-        Eigen::VectorXd new_vec = matrix * evec;
+    old_eigen = 0;
+    new_vec.normalize();
+    evec.normalize();
+    double  eigen_guess =evec.dot(matrix * evec);
+
+  //  cout << "Guess of eigenvalue " << setprecision(16) << eigen_guess << endl; 
+ //   cout << "old eigen " << setprecision(16) << old_eigen << endl;
+ //   cout << "epsilon = " << numeric_limits<double>::epsilon() <<endl;
+ //   cout << "error of eigenvalue " << setprecision(16) <<  abs(eigen_guess-old_eigen)  << endl; 
+
+    while ( abs(eigen_guess-old_eigen) >  numeric_limits<double>::epsilon() ){
+    //    cout << "error of eigenvalue " << setprecision(16) <<  abs(eigen_guess-old_eigen)  << endl; 
+        new_vec = matrix * evec;
+        for (int i = 1; i < rows; i ++){
+            sample = new_vec(i)/evec(i);
+            if (sample > eigen_upper)
+                eigen_upper = sample;
+        }
+       
         new_vec.normalize();
         evec = new_vec;
-        // cout << evec << endl;
-        eigen_guess = evec.dot(matrix * evec);
-        // cout << "Guess of eigenvalue " << setprecision(16) << eigen_guess << endl; 
+//         cout << evec << endl;
+        old_eigen = eigen_guess;
+        eigen_guess = new_vec.dot(matrix * new_vec);
+//        cout << "Guess of eigenvalue " << setprecision(16) << eigen_guess << endl; 
+ //       cout << "upper bound on eigenvalue " << setprecision(16) << eigen_upper << endl; 
+//        cout << "old_eigen " << setprecision(16) << old_eigen << endl; 
+
     }
     return eigen_guess;
 }
 
+
+/*
 int main(int argc, char* argv[]) {
 //    clock_t t = clock();
     generate_matrix(atoi(argv[1]));
@@ -101,4 +138,4 @@ int main(int argc, char* argv[]) {
     double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
    cout << setprecision(16) << eig << endl;
 }
-
+*/
