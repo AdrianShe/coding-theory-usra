@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <limits>
-
+#include "fib.h"
 
 using namespace std;
 using namespace Eigen;
@@ -15,7 +15,7 @@ using namespace Eigen;
 std::vector<long> generate_sequences(int length) {
     // Create the array of sequences 
    std::vector< vector<long> > temp;
-    
+
     // Initialize the array
     std::vector<long> init;
     init.push_back(0);   
@@ -43,6 +43,29 @@ std::vector<long> generate_sequences(int length) {
         // cout << "Size of array " << temp.size() << endl; 
     }
     return temp[length];
+}
+std::vector<long> generate_new_sequences(int length) {
+    // Create the array of fibonnaci numbers
+    int array[length+3];
+    array[1] = 1;
+    array[2] = 2;
+    for (int i = 3; i < length+3; i++){
+        array[i] = array[i-1] + array[i-2];
+    }
+    // Initialize the array
+    std::vector<long> init;
+    init.push_back(0);   
+    init.push_back(1);
+    int pos;  
+    // Now iterate
+    for (int i = 2; i <= length; i++) {
+        int pos = array[i+2] - 1;
+        int end = array[i] - 1;
+        for (int j = 0; j <=end; j++) {
+            init.push_back(init[j] | (1 << i - 1)); 
+        }            
+    }
+    return init;
 }
 
 Eigen::MatrixXd generate_matrix(int length) {
@@ -72,6 +95,21 @@ Eigen::MatrixXd generate_matrix_new(int length) {
     //cout << transfer << endl;
     return transfer;
 }
+Eigen::MatrixXd generate_matrix_new_s(int length) {
+    std::vector<long> sequences = generate_new_sequences(length);
+    int size = sequences.size();
+    Eigen::MatrixXd transfer(size, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = i; j < size; j++) { 
+             int val = !(sequences[i] & sequences[j]);
+             transfer(i,j) = val;
+             transfer(j,i) = val;
+       }
+    }
+    //cout << transfer << endl;
+    return transfer;
+}
+
 
 double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     // Naive implementation of the power method
