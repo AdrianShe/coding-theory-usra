@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
-#include <Eigen/dense>
+#include <Eigen/Dense>
 #include "generate.h"
 
 using namespace std;

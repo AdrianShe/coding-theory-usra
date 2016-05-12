@@ -9,19 +9,17 @@
 #include <limits>
 #include "fib.h"
 #include <utility>      // std::pair, std::make_pair
+#include <map>
 
 using namespace std;
 using namespace Eigen;
 
 std::vector<std::pair<long,long> > generate_2_sequences(int length) {
     // Create the arrays of sequences
-    //create transfer matrix
-   
    std::vector<std::pair<long,long> > ret;
    std::vector< vector<std::pair<long,long> > > end_in_zeros;
    std::vector< vector<std::pair<long,long> > > end_in_top;
    std::vector< vector<std::pair<long,long> > > end_in_bottom;
-  //  Eigen::MatrixXd transfer(fib(length+2), fib(length+2));
   
 //   cout << " finished creating " << endl;
     // Initialize the end_in_zero array
@@ -138,17 +136,55 @@ ret.insert( ret.end(), end_in_bottom[length-1].begin(), end_in_bottom[length-1].
     return ret;
  }
 
+Eigen::MatrixXd generate_matrix_2(int length){
+// compute size
+  int size = fib(length + 2);
+  // create matrix
+  Eigen::MatrixXd transfer(size,size);
+  // prepare index map
+  std::vector<long> table = generate_sequences(length);
+  std::map<int, int> m;
+//   cout << " table size " << table.size() << endl;
+//  cout << "matrix size " << size << endl;
+  for (int i = 0; i < table.size(); i++){
+      m[table[i]]=i;
+//      cout << " key " << table[i]  << " val " << i << endl;
+  } 
+//  cout << " generating matrix" << endl;
+//generate matrix
+  std::vector<std::pair<long,long> > ret =  generate_2_sequences(length);
+// cout << "ret.size " << ret.size() << endl; 
+  for (int i = 0; i < ret.size(); i++){
+ //     cout << " accessing " << i << endl;
+      std::pair<long,long> sample = ret[i];
+ //     cout << " putting " << sample.first << " " << sample.second << endl;
+ //     cout << " in " << m[sample.first] << " " << m[sample.second] << endl;
+      transfer(m[sample.first], m[sample.second]) = 1;
+ //     cout << transfer << endl;
+ //     cout << " insertion complete " << endl;
+  }
+//  cout << " generated matrix " << endl;
+  return transfer;
+} 
 
-
+/*
 int main(int argc, char* argv[]) {
     int input= atoi(argv[1]);
+
     std::vector<std::pair<long,long> > ret =  generate_2_sequences(input);
+
     cout << " sequences !!" << endl;
     for (int i = 0; i < ret.size() ; i++){
         cout<< ret[i].first << " " << ret[i].second << endl;    
     }
     cout << " sizes!! " << endl;
     for (int i = 1; i <= input ; i ++){
+    
+
         cout << generate_2_sequences(i).size() << endl;
     }
+
+    cout << generate_matrix_2(input) << endl;
 }
+
+*/

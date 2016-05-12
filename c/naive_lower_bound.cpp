@@ -6,6 +6,7 @@
 #include <Eigen/Eigenvalues>
 #include "generate.h"
 #include "fib.h"
+#include "generate_2.h"
 
 using namespace std;
 using namespace Eigen;
@@ -17,8 +18,13 @@ int main(int argc, char* argv[]) {
     MatrixXd T_p = generate_matrix(p + 2 * q + 1); 
     MatrixXd T_q = generate_matrix(2 * q + 1);
 */  
+/*
     MatrixXd T_p = generate_matrix_new(p + 2 * q + 1); 
     MatrixXd T_q = generate_matrix_new(2 * q + 1);
+*/
+    MatrixXd T_p = generate_matrix_2(p + 2 * q + 1); 
+    MatrixXd T_q = generate_matrix_2(2 * q + 1);
+
 
 
 //     cout << T_p << endl;
@@ -55,7 +61,7 @@ int main(int argc, char* argv[]) {
     cout << " Time Results !! " << endl;
  
     clock_t t_new = clock();
-    generate_matrix_new_s(atoi(argv[1]));
+    generate_matrix_2(atoi(argv[1]));
     t_new = clock() - t_new;
     cout << (float) t_new/ CLOCKS_PER_SEC << " seconds for new method" << endl; 
     clock_t t = clock();

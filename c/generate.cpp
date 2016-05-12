@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <limits>
 #include "fib.h"
+#include <algorithm>    // std::sort
 
 using namespace std;
 using namespace Eigen;
@@ -60,8 +61,8 @@ std::vector<long> generate_new_sequences(int length) {
     // Now iterate
     for (int i = 2; i <= length; i++) {
         int pos = array[i+2] - 1;
-        int end = array[i] - 1;
-        for (int j = 0; j <=end; j++) {
+        int end = array[i-1];
+        for (int j = 0; j <end; j++) {
             init.push_back(init[j] | (1 << i - 1)); 
         }            
     }
@@ -162,18 +163,34 @@ double transfer_eigenvalue(Eigen::MatrixXd matrix) {
 }
 
 
-/*
+
 int main(int argc, char* argv[]) {
 //    clock_t t = clock();
-    generate_matrix(atoi(argv[1]));
+   int length = atoi(argv[1]);   
+//   cout << " generating old sequences " << endl;
+   std::vector<long> sequences = generate_sequences(length);
+   std::sort (sequences.begin(), sequences.end());
+//   cout << " generating new sequences " << endl;
+   std::vector<long> new_sequences = generate_new_sequences(length);
+   int error=0;
+   for (int i = 0; i < new_sequences.size(); i++){
+       error+= abs(sequences[i]-new_sequences[i]);
+    }
+    cout << error << endl;
+   /*
+   cout << " sizes " << endl;
+   for (int i = 1; i <= length; i++){
+       cout << generate_new_sequences(i).size() << endl;
+   }
+   */
  //   t = clock() - t;
   //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
 
    // clock_t t_new = clock();
-    generate_matrix_new(atoi(argv[1]));
+   // generate_matrix_new(atoi(argv[1]));
    // t_new = clock() - t_new;
     //cout << (float) t_new/ CLOCKS_PER_SEC << " seconds" << endl; 
-    double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
-   cout << setprecision(16) << eig << endl;
+  //  double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
+  // cout << setprecision(16) << eig << endl;
 }
-*/
+
