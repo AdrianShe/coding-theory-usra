@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
     MatrixXd T_q = generate_matrix_new(2 * q + 1);
 
 
-     cout << T_p << endl;
-     cout << T_q << endl;
+//     cout << T_p << endl;
+//     cout << T_q << endl;
 
     Eigen::SelfAdjointEigenSolver<MatrixXd> ep(T_p);
     Eigen::SelfAdjointEigenSolver<MatrixXd> eq(T_q);
@@ -42,23 +42,27 @@ int main(int argc, char* argv[]) {
     double bound = pow(dp / dq, 1.0 / p);
     cout << "The bound is " << bound  << endl;
 
-//    clock_t t = clock();
-//    generate_matrix(atoi(argv[1]));
- //   t = clock() - t;
-  //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
    cout << " Power Method Results !! " << endl;
  
-   // clock_t t_new = clock();
-    generate_matrix_new(atoi(argv[1]));
-   // t_new = clock() - t_new;
-    //cout << (float) t_new/ CLOCKS_PER_SEC << " seconds" << endl; 
+   
     double eigp =  transfer_eigenvalue(T_p);
     double eigq = transfer_eigenvalue(T_q);
     cout << " Dominant eigenvalue of T_(p+2q) \n" << setprecision(16) << eigp << endl;
     cout << " Dominant eigenvalue of T_2q \n" << eigq  << endl;
     bound = pow(eigp / eigq, 1.0 / p);
     cout << "The bound is " << bound  << endl;
-    
+
+    cout << " Time Results !! " << endl;
+ 
+    clock_t t_new = clock();
+    generate_matrix_new_s(atoi(argv[1]));
+    t_new = clock() - t_new;
+    cout << (float) t_new/ CLOCKS_PER_SEC << " seconds for new method" << endl; 
+    clock_t t = clock();
+    generate_matrix(atoi(argv[1]));
+    t = clock() - t;
+    cout << (float) t/ CLOCKS_PER_SEC << " seconds for old method" << endl; 
+ 
 }
 
 

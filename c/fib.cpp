@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "fib.h"
+#include <vector>
 using namespace std;
 
 // Function returns the nth Fibonacci number F_n, using
@@ -23,10 +24,16 @@ int fib(int n) {
     }    
 }
 
-// int main( int argc, char* argv[]) {
-   // for (int i = 1; i < argc; i++ ) {
-      // int n = atoi(argv[i]);
-      // cout << fib(n) << " ";
-  // }
-   // cout << endl;
-// }
+/*
+  int main( int argc, char* argv[]) {
+    for (int i = 1; i < atoi(argv[1]); i++ ) {
+       cout << fib(i) << " ";
+   }
+    cout << endl;
+    for (int i = 1; i < atoi(argv[1]); i++ ) {
+       cout << fib_new(i) << " ";
+   }
+
+ }
+*/
+
