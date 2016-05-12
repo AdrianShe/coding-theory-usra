@@ -118,18 +118,8 @@ double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     Eigen::VectorXd evec(rows); 
     evec.fill(1); 
     Eigen::VectorXd new_vec = matrix * evec;
-    double eigen_upper;
     double old_eigen;
-    double sample = (double) new_vec(1) / evec(1);
  
-    eigen_upper = (double) new_vec(0) / evec(0);
-
-    for (int i = 1; i < rows; i ++){
-        sample = (double) new_vec(i) / evec(i);
-        if (sample > eigen_upper)
-            eigen_upper = sample;
-    }
-    
     old_eigen = 0;
     new_vec.normalize();
     evec.normalize();
@@ -143,11 +133,6 @@ double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     while ( abs(eigen_guess-old_eigen) >  numeric_limits<double>::epsilon() ){
     //    cout << "error of eigenvalue " << setprecision(16) <<  abs(eigen_guess-old_eigen)  << endl; 
         new_vec = matrix * evec;
-        for (int i = 1; i < rows; i ++){
-            sample = new_vec(i)/evec(i);
-            if (sample > eigen_upper)
-                eigen_upper = sample;
-        }
        
         new_vec.normalize();
         evec = new_vec;
@@ -155,34 +140,78 @@ double transfer_eigenvalue(Eigen::MatrixXd matrix) {
         old_eigen = eigen_guess;
         eigen_guess = new_vec.dot(matrix * new_vec);
 //        cout << "Guess of eigenvalue " << setprecision(16) << eigen_guess << endl; 
- //       cout << "upper bound on eigenvalue " << setprecision(16) << eigen_upper << endl; 
+//       cout << "upper bound on eigenvalue " << setprecision(16) << eigen_upper << endl; 
 //        cout << "old_eigen " << setprecision(16) << old_eigen << endl; 
 
     }
     return eigen_guess;
 }
+double transfer_eigenvalue_upper(Eigen::MatrixXd matrix) {
+    // Naive implementation of the power method
+    int rows = matrix.rows();
+    Eigen::VectorXd evec(rows); 
+    evec.fill(1); 
+    Eigen::VectorXd new_vec = matrix * evec;
+    double eigen_upper = -1;
+    double old_eigen;
+    double sample;
+    double dif = 1;
+    double delta;
+    old_eigen = 0;
+    new_vec.normalize();
+    evec.normalize();
+ //   cout << "old eigen " << setprecision(16) << old_eigen << endl;
+ //   cout << "epsilon = " << numeric_limits<double>::epsilon() <<endl;
+
+    while ( abs(eigen_upper-old_eigen) > numeric_limits<double>::epsilon() && abs(dif-delta) > numeric_limits<double>::epsilon()) {
+    //    cout << "error of eigenvalue " << setprecision(16) <<  abs(eigen_guess-old_eigen)  << endl; 
+    dif = delta;
+     delta = abs(eigen_upper - old_eigen);
+        new_vec = matrix * evec;
+        old_eigen = eigen_upper;
+        eigen_upper = 0;
+        for (int i = 0; i < rows; i ++){
+            sample = new_vec(i)/evec(i);
+            if (sample > eigen_upper)
+                eigen_upper = sample;
+        }  
+        new_vec.normalize();
+        evec = new_vec;
+//         cout << evec << endl;
+//       cout << "upper bound on eigenvalue " << setprecision(16) << eigen_upper << endl; 
+//        cout << "old_eigen " << setprecision(16) << old_eigen << endl; 
+
+    }
+    return eigen_upper;
+}
 
 /*
 
+
 int main(int argc, char* argv[]) {
-//    clock_t t = clock();
-   int length = atoi(argv[1]);   
-//   cout << " generating old sequences " << endl;
-   std::vector<long> sequences = generate_sequences(length);
-   std::sort (sequences.begin(), sequences.end());
-//   cout << " generating new sequences " << endl;
-   std::vector<long> new_sequences = generate_new_sequences(length);
-   int error=0;
-   for (int i = 0; i < new_sequences.size(); i++){
-       error+= abs(sequences[i]-new_sequences[i]);
+    int length = atoi(argv[1]);   
+    cout << " generating old sequences " << endl;
+    clock_t t = clock();
+    for (int i = 0; i < length; i++){
+        generate_sequences(i);
     }
-    cout << error << endl;
+    t = clock() - t;
+    cout << " time " << t << endl;
+//     std::sort (sequences.begin(), sequences.end());
+    cout << " generating new sequences " << endl;
+    clock_t t_new = clock();
+    for (int i = 0; i < length; i++){
+        generate_new_sequences(i);
+    }
+    t_new = clock() - t_new;
+    cout << " time " << t_new << endl;;
 
    cout << " sizes " << endl;
    for (int i = 1; i <= length; i++){
        cout << generate_new_sequences(i).size() << endl;
    }
-   
+
+    
  //   t = clock() - t;
   //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
 

@@ -63,6 +63,24 @@ int main(int argc, char* argv[]) {
     bound = pow(eigp / eigq_u, 1.0 / p);
     cout << "The bound is " << bound  << endl;
 
+    cout << " Implicit Method Results !! " << endl;
+        
+    double dp_imp = generate_eigen(p + 2 * q + 1); 
+    double dq_imp = generate_eigen(2 * q + 1);
+    double dp_imp_u = generate_eigen_upper(p + 2 * q + 1); 
+    double dq_imp_u = generate_eigen_upper(2 * q + 1);
+
+ 
+   
+    cout << " Dominant eigenvalue of T_(p+2q) is greater than \n" << setprecision(16) << dp_imp << endl;
+    cout << " Dominant eigenvalue of T_2q is greater than \n" << dq_imp  << endl;
+    cout << " Dominant eigenvalue of T_(p+2q) is less than \n" << setprecision(16) << dp_imp_u << endl;
+    cout << " Dominant eigenvalue of T_2q is less than \n" << dq_imp_u  << endl;
+ 
+    bound = pow(dp_imp / dq_imp_u, 1.0 / p);
+    cout << "The bound is " << bound  << endl;
+
+
     cout << " Time Results !! " << endl;
  
     clock_t t_new = clock();

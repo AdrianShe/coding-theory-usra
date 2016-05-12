@@ -10,6 +10,7 @@
 #include "fib.h"
 #include <utility>      // std::pair, std::make_pair
 #include <map>
+#include <limits>
 
 using namespace std;
 using namespace Eigen;
@@ -142,7 +143,7 @@ Eigen::MatrixXd generate_matrix_2(int length){
   // create matrix
   Eigen::MatrixXd transfer(size,size);
   // prepare index map
-  std::vector<long> table = generate_sequences(length);
+  std::vector<long> table = generate_new_sequences(length);
   std::map<int, int> m;
 //   cout << " table size " << table.size() << endl;
 //  cout << "matrix size " << size << endl;
@@ -167,10 +168,84 @@ Eigen::MatrixXd generate_matrix_2(int length){
   return transfer;
 } 
 
+double generate_eigen(int length){
+    int size = fib(length + 2);
+    Eigen::VectorXd vec(size);
+    vec.fill(1);
+    Eigen::VectorXd new_vec(size);
+    std::vector<long> table = generate_new_sequences(length);
+    std::map<int, int> m;
+//   cout << " table size " << table.size() << endl;
+//  cout << "vector size " << size << endl;
+    for (int i = 0; i < table.size(); i++){
+        m[table[i]]=i;
+//      cout << " key " << table[i]  << " val " << i << endl;
+    } 
+    double eigen_guess = -1;
+    double eigen_old = 0; 
+//generate "implicit matrix" eigenvalue
+    std::vector<std::pair<long,long> > ret =  generate_2_sequences(length);
+    while (abs(eigen_old-eigen_guess) > numeric_limits<double>::epsilon()){ 
+        new_vec.fill(0);
+        vec.normalize();
+        for (int i = 0; i < ret.size(); i++){
+            std::pair<long,long> sample = ret[i];
+            new_vec(m[sample.first])+=vec(m[sample.second]);
+         }
+        eigen_old = eigen_guess;
+//        cout << " old vec " << vec << endl;
+//        cout << " new vec " << new_vec << endl;
+        eigen_guess = vec.dot(new_vec);
+        vec = new_vec;
+    }
+//    cout << " answer " << setprecision(16) << eigen_guess << endl;
+    return eigen_guess;
+}
+
+double generate_eigen_upper(int length){
+    int size = fib(length + 2);
+    Eigen::VectorXd vec(size);
+    double sample;
+    vec.fill(1);
+    Eigen::VectorXd new_vec(size);
+    std::vector<long> table = generate_new_sequences(length);
+    std::map<int, int> m;
+//   cout << " table size " << table.size() << endl;
+//  cout << "vector size " << size << endl;
+    for (int i = 0; i < table.size(); i++){
+        m[table[i]]=i;
+//      cout << " key " << table[i]  << " val " << i << endl;
+    } 
+    double eigen_guess = -1;
+    double eigen_old = 0; 
+//generate "implicit matrix" eigenvalue
+    std::vector<std::pair<long,long> > ret =  generate_2_sequences(length);
+    while (abs(eigen_old-eigen_guess) > numeric_limits<double>::epsilon()){ 
+        new_vec.fill(0);
+        vec.normalize();
+        for (int i = 0; i < ret.size(); i++){
+            std::pair<long,long> sample = ret[i];
+            new_vec(m[sample.first])+=vec(m[sample.second]);
+         }
+        eigen_old = eigen_guess;
+//        cout << " old vec " << vec << endl;
+//        cout << " new vec " << new_vec << endl;
+        eigen_guess = 0;  
+        for (int i = 0; i < size; i++){
+            sample = new_vec(i)/vec(i);
+            if (sample > eigen_guess) eigen_guess = sample;
+        }
+        eigen_guess = vec.dot(new_vec);
+        vec = new_vec;
+    }
+//    cout << " upper " << setprecision(16) << eigen_guess << endl;
+    return eigen_guess;
+}
 /*
 int main(int argc, char* argv[]) {
     int input= atoi(argv[1]);
-
+    generate_eigen(input);
+    generate_eigen_upper(input);
     std::vector<std::pair<long,long> > ret =  generate_2_sequences(input);
 
     cout << " sequences !!" << endl;
@@ -184,7 +259,7 @@ int main(int argc, char* argv[]) {
         cout << generate_2_sequences(i).size() << endl;
     }
 
-    cout << generate_matrix_2(input) << endl;
-}
 
+    cout << generate_matrix_2(input) << endl;
+ }
 */
