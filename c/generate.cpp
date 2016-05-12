@@ -162,7 +162,7 @@ double transfer_eigenvalue(Eigen::MatrixXd matrix) {
     return eigen_guess;
 }
 
-
+/*
 
 int main(int argc, char* argv[]) {
 //    clock_t t = clock();
@@ -177,12 +177,12 @@ int main(int argc, char* argv[]) {
        error+= abs(sequences[i]-new_sequences[i]);
     }
     cout << error << endl;
-   /*
+
    cout << " sizes " << endl;
    for (int i = 1; i <= length; i++){
        cout << generate_new_sequences(i).size() << endl;
    }
-   */
+   
  //   t = clock() - t;
   //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
 
@@ -193,4 +193,4 @@ int main(int argc, char* argv[]) {
   //  double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
   // cout << setprecision(16) << eig << endl;
 }
-
+*/
