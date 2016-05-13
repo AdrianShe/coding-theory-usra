@@ -142,6 +142,7 @@ Eigen::MatrixXd generate_matrix_2(int length){
   int size = fib(length + 2);
   // create matrix
   Eigen::MatrixXd transfer(size,size);
+  transfer.fill(0);
   // prepare index map
   std::vector<long> table = generate_new_sequences(length);
   std::map<int, int> m;
@@ -241,13 +242,17 @@ double generate_eigen_upper(int length){
 //    cout << " upper " << setprecision(16) << eigen_guess << endl;
     return eigen_guess;
 }
-/*
+
 int main(int argc, char* argv[]) {
     int input= atoi(argv[1]);
-    generate_eigen(input);
-    generate_eigen_upper(input);
-    std::vector<std::pair<long,long> > ret =  generate_2_sequences(input);
-
+    for (int i = 1; i <= input; i++){
+    clock_t t = clock();
+    generate_new_sequences(i);
+    t = clock() - t;
+    cout << i << " " << t << endl;
+    }
+    
+    /*
     cout << " sequences !!" << endl;
     for (int i = 0; i < ret.size() ; i++){
         cout<< ret[i].first << " " << ret[i].second << endl;    
@@ -259,7 +264,7 @@ int main(int argc, char* argv[]) {
         cout << generate_2_sequences(i).size() << endl;
     }
 
-
-    cout << generate_matrix_2(input) << endl;
- }
 */
+//    cout << generate_matrix_2(input) << endl;
+ }
+
