@@ -3,11 +3,12 @@ function [T] = build_matrix_from_pairs(L)
    %% compatible pairs L
  
    unique_seqs = unique(L);
+   dict = create_dict(unique_seqs');
    T = zeros(length(unique_seqs));
 
    for i=1:rows(L)
-      first = find(unique_seqs == L(i,1));
-      second = find(unique_seqs == L(i,2));
+      first = dict(L(i,1) + 1);
+      second = dict(L(i,2) + 1);
       T(first, second) = 1;
    endfor
 end 

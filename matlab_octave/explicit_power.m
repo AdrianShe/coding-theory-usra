@@ -19,5 +19,5 @@ function [eigenval, record] = explicit_power(T, tol, vec)
      endwhile
     
      %% Return value of eigenvalue
-     eigenval = new_vec' * implicit_1d_multiply(S, new_vec);
+     eigenval = new_vec' * (T * new_vec);
 end
