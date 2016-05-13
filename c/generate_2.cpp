@@ -247,7 +247,7 @@ int main(int argc, char* argv[]) {
     int input= atoi(argv[1]);
     for (int i = 1; i <= input; i++){
     clock_t t = clock();
-    generate_2_sequences(i);
+    generate_new_sequences(i);
     t = clock() - t;
     cout << i << " " << t << endl;
     }
@@ -265,6 +265,6 @@ int main(int argc, char* argv[]) {
     }
 
 */
-    cout << generate_matrix_2(input) << endl;
+//    cout << generate_matrix_2(input) << endl;
  }
 
