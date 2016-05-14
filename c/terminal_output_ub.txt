@@ -1,0 +1,60 @@
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 2
+ generating matrix 
+ Eigenvalue 2.414213562373095
+ Bound 1.553773974030037
+ time 121
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 4
+ generating matrix 
+ Eigenvalue 5.156325174658662
+ Bound 1.506902225901812
+ time 85
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 6
+ generating matrix 
+ Eigenvalue 11.55170956604815
+ Bound 1.503514809475903
+ time 101
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 8
+ generating matrix 
+ Eigenvalue 26.05798609193972
+ Bound 1.503116374821042
+ time 279
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 10
+ generating matrix 
+ Eigenvalue 58.85193508152279
+ Bound 1.503059160303376
+ time 1391
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 12
+ generating matrix 
+ Eigenvalue 132.9477940474849
+ Bound 1.503050000124952
+ time 9102
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 14
+ generating matrix 
+ Eigenvalue 300.345852027355
+ Bound 1.503048429581555
+ time 73787
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 16
+ generating matrix 
+ Eigenvalue 678.5256693463316
+ Bound 1.503048147377047
+ time 438796
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 18
+ generating matrix 
+ Eigenvalue 1532.892835974576
+ Bound 1.50304809491368
+ time 3583982
+
+adrian@adrian-270E5J:~/coding-theory-usra/c$ ./generate 20
+ generating matrix 
+ Eigenvalue 3463.039870272436
+ Bound 1.503048084905757
+ time 32353207
+

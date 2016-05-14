@@ -70,16 +70,30 @@ std::vector<long> generate_new_sequences(int length) {
 }
 
 std::vector<long> generate_ring_sequences(int length) {
-    // Create the array of fibonnaci numbers
     
-    // Initialize the array
     std::vector<long> ret;
-    std::vector<long> init = generate_new_sequences(length);
-   for (int i = 0; i < init.size(); i++){
-       long sample = init[i];
-      if(sample % 2 == 0 || (sample >> (length-1)) % 2 == 0 )
-         ret.push_back(sample);
-   } 
+    switch ( length ) {
+       case 3:
+           ret.push_back(4);
+       case 2:
+           ret.push_back(2);
+           ret.push_back(1);
+       case 0: // Base cases are i = 0, 3 as generate_new_sequences
+       case 1: // doesn't work with length < 0
+          ret.push_back(0);
+          break;
+       default:
+         std::vector<long>  end_in_zero = generate_new_sequences(length - 1);
+         std::vector<long> end_in_one = generate_new_sequences(length - 3);
+          for (int i = 0; i < end_in_zero.size(); i++) {
+              end_in_zero[i] = (end_in_zero[i] << 1);
+          }
+          for (int i = 0; i < end_in_one.size(); i++) {
+              end_in_one[i] = (end_in_one[i] << 2) + 1;
+          }
+        ret.insert(ret.end(), end_in_zero.begin(), end_in_zero.end());
+        ret.insert(ret.end(), end_in_one.begin(), end_in_one.end());
+    }
    return ret;
 }
 
@@ -114,6 +128,7 @@ Eigen::MatrixXd generate_matrix_ring(int length) {
     std::vector<long> sequences = generate_ring_sequences(length);
     int size = sequences.size();
     Eigen::MatrixXd transfer(size, size);
+    transfer.fill(0);
     for (int i = 0; i < size; i++) {
         for (int j = i; j < size; j++) { 
              int val = !(sequences[i] & sequences[j]);
@@ -188,7 +203,7 @@ double transfer_eigenvalue_upper(Eigen::MatrixXd matrix) {
     old_eigen = 0;
     new_vec.normalize();
     evec.normalize();
- //   cout << "old eigen " << setprecision(16) << old_eigen << endl;
+  // cout << "old eigen " << setprecision(16) << old_eigen << endl;
  //   cout << "epsilon = " << numeric_limits<double>::epsilon() <<endl;
 
     while ( abs(eigen_upper-old_eigen) > numeric_limits<double>::epsilon() && abs(dif-delta) > numeric_limits<double>::epsilon()) {
@@ -213,36 +228,42 @@ double transfer_eigenvalue_upper(Eigen::MatrixXd matrix) {
     return eigen_upper;
 }
 
-
-
-
 int main(int argc, char* argv[]) {
     int length = atoi(argv[1]);   
-    cout << " generating ring sequences " << endl;
+    cout << " generating matrix " << endl;
     clock_t t = clock();
-    for (int i = 0; i < length; i++){
-        generate_ring_sequences(i);
-    }
+
+  //  vector<long> sequences = generate_ring_sequences(length);
+    MatrixXd matrix = generate_matrix_ring(length);
     t = clock() - t;
+ //   cout << " Matrix \n" << matrix << endl;
+     double eig = transfer_eigenvalue(matrix);
+    cout << " Eigenvalue " << setprecision(16) << eig << endl;
+    cout << " Bound " << pow(eig, 1.0/ length) << endl;
+//    for (int i = 0; i < sequences.size(); i++) {
+ //   cout << sequences[i] << " ";
+  //  }
+    //cout << endl;
+ //    cout << " Size " << sequences.size() << endl;
     cout << " time " << t << endl;
 //     std::sort (sequences.begin(), sequences.end());
-    cout << " generating new sequences " << endl;
-    clock_t t_new = clock();
-    for (int i = 0; i < length; i++){
-        generate_new_sequences(i);
-    }
-    t_new = clock() - t_new;
-    cout << " time " << t_new << endl;;
+   // cout << " generating new sequences " << endl;
+  //  clock_t t_new = clock();
+   // for (int i = 0; i < length; i++){
+    //    generate_new_sequences(i);
+    //}
+    //t_new = clock() - t_new;
+    //cout << " time " << t_new << endl;;
 
-   cout << " sizes " << endl;
-   for (int i = 1; i <= length; i++){
-       cout << generate_ring_sequences(i).size() << endl;
-   }
-   cout << " sequences of length "<< length << endl;
-    std::vector<long> sequences = generate_ring_sequences(length);
-   for (int i = 0; i <sequences.size() ; i++){
-       cout << std::bitset<16>(sequences[i]) << endl;
-   }
+   //cout << " sizes " << endl;
+   //for (int i = 1; i <= length; i++){
+    //   cout << generate_ring_sequences(i).size() << endl;
+  // }
+ //  cout << " sequences of length "<< length << endl;
+  //  std::vector<long> sequences = generate_ring_sequences(length);
+ //  for (int i = 0; i <sequences.size() ; i++){
+  //     cout << std::bitset<16>(sequences[i]) << endl;
+   //}
 
 
 
