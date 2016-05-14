@@ -238,13 +238,14 @@ int main(int argc, char* argv[]) {
    for (int i = 1; i <= length; i++){
        cout << generate_ring_sequences(i).size() << endl;
    }
+/*   
    cout << " sequences of length "<< length << endl;
     std::vector<long> sequences = generate_ring_sequences(length);
    for (int i = 0; i <sequences.size() ; i++){
        cout << std::bitset<16>(sequences[i]) << endl;
    }
 
-
+*/
 
     
  //   t = clock() - t;
