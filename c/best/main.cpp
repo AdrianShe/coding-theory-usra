@@ -19,12 +19,12 @@ int main(int argc, char* argv[]) {
     double lower_bound = pow(eig_nume / eig_denom, 1.0 / p);
     t = clock()-t;
    cout << "The lower bound is " <<lower_bound  << " in time " << t << endl;
-/*    t = clock();
+    t = clock();
     double eig = compute_eigen_ring_upper(2*p); 
     double upper_bound = pow(eig, 1.0 / (2*p));
     t = clock()-t;
     cout <<"The upper bound is " << upper_bound << " in time " << t << endl; 
-*/
+
 }
 
 
