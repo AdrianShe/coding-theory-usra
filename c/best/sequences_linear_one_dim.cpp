@@ -7,13 +7,20 @@
 #include <iomanip>
 #include <limits>
 #include "fib.h"
+#include "sequences_linear_one_dim.h"
 #include <algorithm>    // std::sort
 #include <bitset>
 using namespace std;
 using namespace Eigen;
 
+
+// generate linear one dimensional sequences of length
+std::vector<long> generate_linear_one_dim_sequences(int length){
+    return generate_linear_one_dim_sequences_helper(length, generate_fib_array(length+2));
+}
+
 // use fibonnaci table to generate linear one dimensional sequences of length
-std::vector<long> generate_sequences_helper(int length, std::vector<int> array) {
+std::vector<long> generate_linear_one_dim_sequences_helper(int length, std::vector<int> array) {
     // Create the array of fibonnaci numbers
 //    int array[length+2];
    // Initialize the array
@@ -34,25 +41,17 @@ std::vector<long> generate_sequences_helper(int length, std::vector<int> array) 
     }
     return init;
 }
-
-// generate linear one dimensional sequences of length
-std::vector<long> generate_linear_one_dim_sequences(int length){
-    return generate_sequences_helper(length, generate_fib_array(length+2));
-}
-
-
+/*
 int main(int argc, char* argv[]) {
     int length = atoi(argv[1]);   
-    cout << " generating new sequences " << endl;
-    clock_t t_new = clock(); 
-    for (int i = 0; i < length; i++){
-     generate_linear_one_dim_sequences(i);
+    cout << " generating sequences of length " << length << endl;
+    for (int i = 0; i < generate_linear_one_dim_sequences(length).size(); i++){
+     cout << std::bitset<16>(generate_linear_one_dim_sequences(length)[i]) << endl;
     }
-    t_new = clock() - t_new;
-    cout << " time " << t_new << endl;;
 
   cout << " sizes " << endl;
    for (int i = 1; i <= length; i++){
      cout << generate_linear_one_dim_sequences(i).size() << endl;
    }
 }
+*/
