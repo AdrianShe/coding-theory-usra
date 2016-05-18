@@ -11,7 +11,7 @@
 #include "sequences_linear_two_dim.h"
 #include "sequences_ring_one_dim.h"
 #include "sequences_ring_two_dim.h"
-#include "compute_eigen_value.h"
+#include "compute_eigen_value_two_dim.h"
 #include <utility>      // std::pair, std::make_pair
 #include <map>
 #include <limits>
@@ -20,22 +20,22 @@
 using namespace std;
 using namespace Eigen;
 
-double compute_eigen_ring_lower(int length){
-    return compute_eigen_lower_helper(length, generate_ring_one_dim_sequences(length), generate_ring_two_dim_sequences(length));
+double compute_eigen_ring_two_dim_lower(int length){
+    return compute_eigen_lower_two_dim_helper(length, generate_ring_one_dim_sequences(length), generate_ring_two_dim_sequences(length));
 }
-double compute_eigen_linear_lower(int length){
-    return compute_eigen_lower_helper(length, generate_linear_one_dim_sequences(length), generate_linear_two_dim_sequences(length));
-}
-
-double compute_eigen_ring_upper(int length){
-    return compute_eigen_upper_helper(length, generate_ring_one_dim_sequences(length), generate_ring_two_dim_sequences(length));
-}
-double compute_eigen_linear_upper(int length){
-    return compute_eigen_upper_helper(length, generate_linear_one_dim_sequences(length), generate_linear_two_dim_sequences(length));
+double compute_eigen_linear_two_dim_lower(int length){
+    return compute_eigen_lower_two_dim_helper(length, generate_linear_one_dim_sequences(length), generate_linear_two_dim_sequences(length));
 }
 
+double compute_eigen_ring_two_dim_upper(int length){
+    return compute_eigen_upper_two_dim_helper(length, generate_ring_one_dim_sequences(length), generate_ring_two_dim_sequences(length));
+}
+double compute_eigen_linear_two_dim_upper(int length){
+    return compute_eigen_upper_two_dim_helper(length, generate_linear_one_dim_sequences(length), generate_linear_two_dim_sequences(length));
+}
 
-double compute_eigen_lower_helper(int length, std::vector<long> table, std::vector<std::pair<long,long> > seqs){    
+
+double compute_eigen_lower_two_dim_helper(int length, std::vector<long> table, std::vector<std::pair<long,long> > seqs){    
     int size = table.size();
     Eigen::VectorXd vec(size);
     vec.fill(1);
@@ -61,7 +61,7 @@ double compute_eigen_lower_helper(int length, std::vector<long> table, std::vect
     return eigen_guess;
 }
 
-double compute_eigen_upper_helper(int length, std::vector<long> table, std::vector<std::pair<long,long> > seqs){
+double compute_eigen_upper_two_dim_helper(int length, std::vector<long> table, std::vector<std::pair<long,long> > seqs){
     int size = table.size();
     Eigen::VectorXd vec(size);
     double sample;
