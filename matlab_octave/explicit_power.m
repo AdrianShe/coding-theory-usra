@@ -4,11 +4,17 @@ function [eigenval, record] = explicit_power(T, tol, vec)
      %% Power Method algorithm with explicit matrix T
      record = [1];
      num_its = 1;
+     lbs = [];
+     ubs = [];
      while (1) 
           new_vec = T * vec;
+       %%   ubs = horzcat(ubs, max(new_vec ./ vec));
           new_vec = new_vec / norm(new_vec);
           n = norm(vec - new_vec);
           record = horzcat(record, n);
+       %%   lbs = horzcat(lbs, new_vec' * T * new_vec);
+        %%  new_vec ./ vec
+
           printf('The norm difference is %e \n', n)
           fflush(stdout);
           num_its += 1;

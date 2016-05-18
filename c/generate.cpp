@@ -232,61 +232,11 @@ int main(int argc, char* argv[]) {
     int length = atoi(argv[1]);   
     cout << " generating matrix " << endl;
     clock_t t = clock();
-
-  //  vector<long> sequences = generate_ring_sequences(length);
     MatrixXd matrix = generate_matrix_ring(length);
+    double eig = transfer_eigenvalue(matrix);
     t = clock() - t;
- //   cout << " Matrix \n" << matrix << endl;
-     double eig = transfer_eigenvalue(matrix);
     cout << " Eigenvalue " << setprecision(16) << eig << endl;
     cout << " Bound " << pow(eig, 1.0/ length) << endl;
-//    for (int i = 0; i < sequences.size(); i++) {
- //   cout << sequences[i] << " ";
-  //  }
-    //cout << endl;
- //    cout << " Size " << sequences.size() << endl;
     cout << " time " << t << endl;
-//     std::sort (sequences.begin(), sequences.end());
-   // cout << " generating new sequences " << endl;
-  //  clock_t t_new = clock();
-   // for (int i = 0; i < length; i++){
-    //    generate_new_sequences(i);
-    //}
-    //t_new = clock() - t_new;
-    //cout << " time " << t_new << endl;;
-
-   //cout << " sizes " << endl;
-   //for (int i = 1; i <= length; i++){
-    //   cout << generate_ring_sequences(i).size() << endl;
-  // }
- //  cout << " sequences of length "<< length << endl;
-  //  std::vector<long> sequences = generate_ring_sequences(length);
- //  for (int i = 0; i <sequences.size() ; i++){
-  //     cout << std::bitset<16>(sequences[i]) << endl;
-   //}
-
-   cout << " sizes " << endl;
-   for (int i = 1; i <= length; i++){
-       cout << generate_ring_sequences(i).size() << endl;
-   }
-/*  
-   cout << " sequences of length "<< length << endl;
-    std::vector<long> sequences = generate_ring_sequences(length);
-   for (int i = 0; i <sequences.size() ; i++){
-       cout << std::bitset<16>(sequences[i]) << endl;
-   }
-*/
-
-
-
-    
- //   t = clock() - t;
-  //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
-
-   // clock_t t_new = clock();
-   // generate_matrix_new(atoi(argv[1]));
-   // t_new = clock() - t_new;
-    //cout << (float) t_new/ CLOCKS_PER_SEC << " seconds" << endl; 
-  //  double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
-  // cout << setprecision(16) << eig << endl;
+    cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl; 
 }
