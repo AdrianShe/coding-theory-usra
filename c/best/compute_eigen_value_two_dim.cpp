@@ -43,6 +43,13 @@ double compute_eigen_lower_two_dim_helper(int length, std::vector<long> table, s
     std::map<int, int> m;
     for (int i = 0; i < size; i++){
         m[table[i]]=i;
+    }
+    std::vector<std::pair<long,long> >index;
+    index.reserve(seqs.size());
+    for (int i = 0; i < seqs.size(); i++){
+        std::pair<long,long> sample = seqs[i];
+        std::pair<long, long> mapped (m[sample.first],m[sample.second]);
+        index[i] = mapped;
     } 
     double eigen_guess = -1;
     double eigen_old = 0; 
@@ -50,10 +57,12 @@ double compute_eigen_lower_two_dim_helper(int length, std::vector<long> table, s
     while (abs(eigen_old-eigen_guess) > numeric_limits<double>::epsilon()){ 
         new_vec.fill(0);
         vec.normalize();
+//        cout << "vec " << vec << endl;
         for (int i = 0; i < seqs.size(); i++){
-            std::pair<long,long> sample = seqs[i];
-            new_vec(m[sample.first])+=vec(m[sample.second]);
-         }
+            std::pair<long,long> s = index[i];
+            new_vec(s.first) += vec(s.second);
+        }
+//        cout << " new vec " <<new_vec<< endl;
         eigen_old = eigen_guess;
         eigen_guess = vec.dot(new_vec);
         vec = new_vec;
@@ -71,15 +80,21 @@ double compute_eigen_upper_two_dim_helper(int length, std::vector<long> table, s
    for (int i = 0; i < size; i++){
         m[table[i]]=i;
    } 
+    std::vector<std::pair<long,long> >index;
+    index.reserve(seqs.size());
+    for (int i = 0; i < seqs.size(); i++){
+        std::pair<long,long> sample = seqs[i];
+        std::pair<long, long> mapped (m[sample.first],m[sample.second]);
+        index[i] = mapped;
+    } 
     double eigen_guess = -1;
-    double eigen_old = 0; 
-//generate "implicit matrix" eigenvalue
+    double eigen_old = 0; //generate "implicit matrix" eigenvalue
     while (abs(eigen_old-eigen_guess) > numeric_limits<double>::epsilon()){ 
         new_vec.fill(0);
         vec.normalize();
         for (int i = 0; i < seqs.size(); i++){
-            std::pair<long,long> sample = seqs[i];
-            new_vec(m[sample.first])+=vec(m[sample.second]);
+            std::pair<long,long> sample = index[i];
+            new_vec(sample.first)+=vec(sample.second);
          }
         eigen_old = eigen_guess;
         eigen_guess = 0;  
