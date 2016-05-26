@@ -11,6 +11,7 @@
 #include <utility>      // std::pair, std::make_pair
 #include <map>
 #include <limits>
+#include <bitset>
 
 using namespace std;
 using namespace Eigen;
@@ -137,6 +138,28 @@ ret.insert( ret.end(), end_in_bottom[length-1].begin(), end_in_bottom[length-1].
     return ret;
  }
 
+bool is_ring(std::pair<long,long> sample, int length){
+    long top = sample.first;
+    long bottom = sample.second;
+    if (top % 2 == 1 && (top >> (length-1)) % 2 == 1)
+        return false;
+    if (bottom % 2 == 1 && (bottom >> (length-1)) % 2 == 1)
+        return false;
+    return true;
+}
+
+std::vector<std::pair<long,long> > keep_rings(std::vector<std::pair<long,long> > seqs, int length){
+    std::vector<std::pair<long,long> > ret;
+    for (int i = 0; i < seqs.size(); i++){
+        if (is_ring(seqs[i], length)) ret.push_back(seqs[i]);
+    }
+    return ret;
+}
+
+std::vector<std::pair<long,long> > generate_rings_2(int length){
+    return keep_rings(generate_2_sequences(length), length);
+}
+
 Eigen::MatrixXd generate_matrix_2(int length){
 // compute size
   int size = fib(length + 2);
@@ -170,6 +193,39 @@ Eigen::MatrixXd generate_matrix_2(int length){
 } 
 
 double generate_eigen(int length){
+    int size = fib(length + 2);
+    Eigen::VectorXd vec(size);
+    vec.fill(1);
+    Eigen::VectorXd new_vec(size);
+    std::vector<long> table = generate_new_sequences(length);
+    std::map<int, int> m;
+//   cout << " table size " << table.size() << endl;
+//  cout << "vector size " << size << endl;
+    for (int i = 0; i < table.size(); i++){
+        m[table[i]]=i;
+//      cout << " key " << table[i]  << " val " << i << endl;
+    } 
+    double eigen_guess = -1;
+    double eigen_old = 0; 
+//generate "implicit matrix" eigenvalue
+    std::vector<std::pair<long,long> > ret =  generate_2_sequences(length);
+    while (abs(eigen_old-eigen_guess) > numeric_limits<double>::epsilon()){ 
+        new_vec.fill(0);
+        vec.normalize();
+        for (int i = 0; i < ret.size(); i++){
+            std::pair<long,long> sample = ret[i];
+            new_vec(m[sample.first])+=vec(m[sample.second]);
+         }
+        eigen_old = eigen_guess;
+//        cout << " old vec " << vec << endl;
+//        cout << " new vec " << new_vec << endl;
+        eigen_guess = vec.dot(new_vec);
+        vec = new_vec;
+    }
+//    cout << " answer " << setprecision(16) << eigen_guess << endl;
+    return eigen_guess;
+}
+double generate_eigen_ring(int length){
     int size = fib(length + 2);
     Eigen::VectorXd vec(size);
     vec.fill(1);
@@ -245,26 +301,30 @@ double generate_eigen_upper(int length){
 
 int main(int argc, char* argv[]) {
     int input= atoi(argv[1]);
-    for (int i = 1; i <= input; i++){
-    clock_t t = clock();
-    generate_new_sequences(i);
-    t = clock() - t;
-    cout << i << " " << t << endl;
-    }
-    
+    std::vector<std::pair<long,long> > ret = generate_rings_2(input);
+  cout << "sequences !!" << endl;
+     for (int i = 0; i < ret.size(); i++){
+      std::pair<long,long> sample = ret[i];
+      long top = sample.first;
+      long bottom = sample.second;
+      cout << std::bitset<16>(top) << endl;
+      cout << std::bitset<16>(bottom) << endl;
+      cout << endl;
+   }
+
+        
     /*
     cout << " sequences !!" << endl;
     for (int i = 0; i < ret.size() ; i++){
         cout<< ret[i].first << " " << ret[i].second << endl;    
     }
+    */
     cout << " sizes!! " << endl;
     for (int i = 1; i <= input ; i ++){
-    
-
-        cout << generate_2_sequences(i).size() << endl;
+        cout << generate_rings_2(i).size() << endl;
     }
 
-*/
+
 //    cout << generate_matrix_2(input) << endl;
  }
 
