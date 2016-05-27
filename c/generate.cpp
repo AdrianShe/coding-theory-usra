@@ -233,19 +233,11 @@ int main(int argc, char* argv[]) {
     int length = atoi(argv[1]);   
     cout << " generating matrix " << endl;
     clock_t t = clock();
-
-  //  vector<long> sequences = generate_ring_sequences(length);
     MatrixXd matrix = generate_matrix_ring(length);
+    double eig = transfer_eigenvalue(matrix);
     t = clock() - t;
- //   cout << " Matrix \n" << matrix << endl;
-     double eig = transfer_eigenvalue(matrix);
     cout << " Eigenvalue " << setprecision(16) << eig << endl;
     cout << " Bound " << pow(eig, 1.0/ length) << endl;
-//    for (int i = 0; i < sequences.size(); i++) {
- //   cout << sequences[i] << " ";
-  //  }
-    //cout << endl;
- //    cout << " Size " << sequences.size() << endl;
     cout << " time " << t << endl;
 //     std::sort (sequences.begin(), sequences.end());
    // cout << " generating new sequences " << endl;
@@ -277,10 +269,6 @@ int main(int argc, char* argv[]) {
        cout << std::bitset<16>(sequences[i]) << endl;
    }
 
-
-
-
-    
  //   t = clock() - t;
   //  cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl;
 
@@ -290,5 +278,6 @@ int main(int argc, char* argv[]) {
     //cout << (float) t_new/ CLOCKS_PER_SEC << " seconds" << endl; 
   //  double eig =  transfer_eigenvalue(generate_matrix(atoi(argv[1])));
   // cout << setprecision(16) << eig << endl;
+    cout << (float) t/ CLOCKS_PER_SEC << " seconds" << endl; 
 }
 */
