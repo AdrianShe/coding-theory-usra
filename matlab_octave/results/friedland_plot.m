@@ -14,19 +14,29 @@ ylabel('Lambda_i/eta^i')
 
 differences = zeros(1,26);
 for i=1:26
-  differences(i) = abs(data(i+1) - data(i));
+  differences(i) = data(i+1) - data(i);
 endfor 
 
 figure;
 plot(1:26, differences, '*');
-title('i v. Lambda_(i+1)/eta^(i+1) - Lambda_i/eta^i')
+title('Plot of Successive Differences')
 xlabel('i')
 ylabel('Successive Differences in Lambda_i/eta^i')
 
 figure;
-plot(1:26, log10(differences), '*');
-title('i v. log(Lambda_(i+1)/eta^(i+1) - Lambda_i/eta^i)')
+plot(1:26, log10(abs(differences)), '*');
+title('Plot of Log10(Successive Differences)')
 xlabel('i')
 ylabel('Log of Successive Differences in Lambda_i/eta^i')
 
+lim = 1.069354538769;
+differences_lim = zeros(1,27);
+for i=1:27
+  differences_lim(i) = data(i) - lim;
+endfor
 
+figure
+plot(2:28, log10(abs(differences_lim)), '*');
+title('Plot of Distances from Conjectured Limit = 1.069354538769')
+xlabel('i')
+ylabel('Difference from Limit')
