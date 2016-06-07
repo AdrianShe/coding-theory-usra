@@ -12,6 +12,9 @@ using namespace std;
 int main(int argc, char* argv[]) {
     int p = atoi(argv[1]);
     int q = atoi(argv[2]);
+    for (int i = 1; i <= p; i+=2){
+        cout << "EIG "<< i << "="  <<  setprecision(16) << compute_eigen_ring_one_dim_upper(i) << endl;
+    }
     cout << setprecision(16) << "p = " << p << ", q = " << q << endl;
     cout << " 2 D !!! " <<  endl;
     cout << " Power Method Results !! " << endl;
@@ -59,8 +62,12 @@ int main(int argc, char* argv[]) {
     upper_bound = pow(eig, 1.0 / (2*p));
     t = clock() - t;
     cout <<"The upper bound is " << upper_bound << " in time " << t << endl; 
-
-
+    
+    t = clock();
+    eig = compute_eigen_ring_one_dim_upper(2*p); 
+    upper_bound = pow(eig, 1.0 / (2*p));
+    t = clock() - t;
+    cout <<"The upper bound is " << upper_bound << " in time " << t << endl;     
 }
 
 
