@@ -86,15 +86,43 @@ double brian_constant(int a , int b , int c){
     keep_vec = multiply_t_helper(a+1,seqs_2,keep_vec, c-2);
     return new_vec.sum()/keep_vec.sum();
 }
+double andrew_constant (int a , int b , int c){
+/*    cout << "a = " << a << endl;//
+    cout << "b = " << b << endl;//
+    cout << "c = " << c << endl;//
+*/  // Do original system
+    int fib_t = fib(c+2);
+    int fib_tb = fib (b+c+2);
+    Eigen::VectorXd top(fib_t);
+    Eigen::VectorXd bottom(fib_tb-fib_t);
+    top.fill(1);
+    bottom.fill(0);
+    Eigen::VectorXd vec(fib_tb);
+   vec << top, bottom; 
+    std::vector<long>seqs =  generate_linear_one_dim_sequences(b+c);  
+    vec = multiply_t_helper(b+c,seqs, vec, a);
+    // Remove one square
+    int fib_t_new = fib(c+1);
+    Eigen::VectorXd top_new(fib_t_new);
+    Eigen::VectorXd bottom_new(fib_tb-fib_t_new);
+    top_new.fill(1);
+    bottom_new.fill(0);
+    Eigen::VectorXd vec_new(fib_tb);
+   vec_new << top_new, bottom_new;
+      vec_new = multiply_t_helper(b+c,seqs,vec_new, a);
+    // Return eta approx (?)
+    return vec.sum()/vec_new.sum();
+}
+
 
 int main(int argc, char* argv[]) {
     int a_start = atoi(argv[1]);
     int b_start = atoi(argv[2]);
     int c_start = atoi(argv[3]);
     for (int a = 1; a<=a_start; a++){
-        for (int b = 30; b<=b_start; b++){
-            for (int c = 30; c<=c_start;c++){
-                cout << "a =" << a << " b =" << b << " c =" << c << " brian constant = " << setprecision(16) << brian_constant(a,b,c) << endl;
+        for (int b = 1; b<=b_start; b++){
+            for (int c = 2; c<=c_start;c++){
+                cout << "a =" << a << " b =" << b << " c =" << c << " brian constant = " << setprecision(16) << andrew_constant(a,b,c) << endl;
             }
         }
     }
