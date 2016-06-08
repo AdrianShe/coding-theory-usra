@@ -91,10 +91,11 @@ int main(int argc, char* argv[]) {
     int a_start = atoi(argv[1]);
     int b_start = atoi(argv[2]);
     int c_start = atoi(argv[3]);
+    cout << "a b c brian_constant" <<  setprecision(16) << endl;
     for (int a = 1; a<=a_start; a++){
-        for (int b = 30; b<=b_start; b++){
-            for (int c = 30; c<=c_start;c++){
-                cout << "a =" << a << " b =" << b << " c =" << c << " brian constant = " << setprecision(16) << brian_constant(a,b,c) << endl;
+        for (int b = 1; b<=b_start; b++){
+            for (int c = 2; c<=c_start;c++){
+                cout << a << " " << b << " " <<  c << " " << brian_constant(a,b,c) << endl;
             }
         }
     }
