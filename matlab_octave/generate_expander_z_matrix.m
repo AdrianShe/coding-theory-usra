@@ -10,12 +10,10 @@ function [expander] = generate_expander_z_matrix(z, S, E, C)
        powers(i) = z^(i-1);
    endfor
 
-   for i=1:length(S)
-      result = bitand(S(i), E);
-      result = (result ==  0);
-      for j=1:length(result)
-         if result(j) == 1 
-             expander(j,i) = powers(C(j) + 1);
+   for i=1:length(E)
+     for j=1:length(S)
+         if (bitand(E(i), S(j)) == 0)
+            expander(i,j) = powers(C(i) + 1);
          endif
       endfor 
    endfor  

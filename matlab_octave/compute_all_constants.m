@@ -1,4 +1,4 @@
-function [vals] = compute_all_constants(T1, T2, E, a, b, c)
+function [vals] = compute_all_constants(T1, T2, E, a, b, c, ones_vector)
    %% b: the maximum value of b
    %% c: the maximum value of c
   
@@ -25,12 +25,16 @@ function [vals] = compute_all_constants(T1, T2, E, a, b, c)
    endfor
    printf('Finished computing T2 powers \n');
  
-   ones_vector = ones(rows(T1), 1);
    for i=1:b
     for j=2:c
      number_top = T2_cell{j-1} * E * T1_cell{i+1} * ones_vector;
      number_bottom = T2_cell{j} * E * T1_cell{i} * ones_vector;
+%     sum(number_bottom)
+%    sum(number_top)
      vals(i,j-1) = sum(number_bottom) / sum(number_top);
+     %sum(number_bottom)
+     %sum(number_top)
+
      fprintf('%d %d %d \n', a, i, j); 
      fflush(stdout);
      endfor
