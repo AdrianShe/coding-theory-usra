@@ -15,6 +15,7 @@
 #include <map>
 #include <limits>
 #include <bitset>
+#include <fstream>
 
 using namespace std;
 using namespace Eigen;
@@ -116,20 +117,21 @@ double andrew_constant (int a , int b , int c){
 
 
 int main(int argc, char* argv[]) {
-    int a_start = atoi(argv[1]);
-    int b_start = atoi(argv[2]);
-    int c_start = atoi(argv[3]);
-    cout << "a b c brian_constant" <<  setprecision(16) << endl;
-    for (int a = 1; a<=a_start; a++){
-        for (int b = 1; b<=b_start; b++){
-            for (int c = 2; c<=c_start;c++){
-              cout << a << " " << b << " " <<  c << " " << brian_constant(a,b,c) << endl;
-           }
+    int a_end = atoi(argv[1]);
+    int b_c_end = atoi(argv[2]);
+    int c;
+    ofstream output ( "bc.txt" );
+    output <<left << setw(5) << "a" << setw(5) << "b" << setw(5) << "c" << setw(5) << "b+c" << setw(20) << "L" << endl;
+    for (int a = a_end; a<=a_end; a++){
+        for (int b_c = 3; b_c <= b_c_end; b_c++){
+            for (int b = 1; b <= b_c-2; b++){
+                c = b_c - b;
+                output << left << setw(5) << a << setw(5)  << b << setw(5) <<  c << setw(5) << b + c << setw(20) << andrew_constant(a,b,c) << endl;
+            }
         }
     }
- 
-}   
-
+    output.close();
+}
 
 
 
