@@ -30,7 +30,7 @@ function [vals] = compute_all_constants(T1, T2, E, a, b, c)
     for j=2:c
      number_top = T2_cell{j-1} * E * T1_cell{i+1} * ones_vector;
      number_bottom = T2_cell{j} * E * T1_cell{i} * ones_vector;
-     vals(i,j-1) = sum(number_top) / sum(number_bottom);
+     vals(i,j-1) = sum(number_bottom) / sum(number_top);
      fprintf('%d %d %d \n', a, i, j); 
      fflush(stdout);
      endfor
