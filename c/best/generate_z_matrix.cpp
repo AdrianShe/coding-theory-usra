@@ -113,18 +113,9 @@ double brian_constant(int a , int b , int c, double z, std::vector<long> seqs, s
     Eigen::VectorXd vec_t = vec;
     Eigen::VectorXd vec_b = vec;
     std::vector<int> counts_2 = generate_counts(seqs_2);
-    Eigen::MatrixXd T_a = generate_z_matrix_helper(a, seqs, z, counts);
-    Eigen::MatrixXd E_a = generate_z_matrix_expander_helper(a, seqs, seqs_2, z, counts_2);
-    Eigen::MatrixXd T_a_1 = generate_z_matrix_helper(a+1, seqs_2, z, counts_2);   
-   if ( a>=10 ){
-   ofstream matrix ("new.txt"); 
-    matrix << "Matrices for a = " << a << endl;
-    matrix << T_a << endl;
-    matrix << endl;
-    matrix << E_a << endl;
-    matrix << endl;
-    matrix << T_a_1 << endl;
-    }
+    Eigen::MatrixXd T_a =generate_z_matrix_helper(a, seqs, z, counts)*1/vec(size-1);
+    Eigen::MatrixXd E_a = generate_z_matrix_expander_helper(a, seqs, seqs_2, z, counts_2)*1/vec(size-1);
+    Eigen::MatrixXd T_a_1 = generate_z_matrix_helper(a+1, seqs_2, z, counts_2)*1/vec(size-1);   
     for (int i = 0; i < b -1; i++){
         vec_t = T_a*vec_t;
     }
@@ -136,11 +127,27 @@ double brian_constant(int a , int b , int c, double z, std::vector<long> seqs, s
         vec_b_new = T_a_1*vec_b_new;
     }
     vec_t_new = T_a_1*vec_t_new;
-
+  //  cout << "top = " << vec_t_new.sum() << endl;
+  //  cout << "bot = " << vec_b_new.sum() << endl;
        return vec_t_new.sum()/vec_b_new.sum();
 }
-/*
-double andrew_constant (int a , int b , int c){
+Eigen::VectorXd get_vec_a(Eigen::MatrixXd mat,std::vector<long> seqs,  std::vector<int> counts, Eigen::VectorXd vec, int a,int b, int c, double z){
+    if (a==0){
+        int fib_tb = fib (b+c+2); 
+            int fib_t = fib(c+2);
+            Eigen::VectorXd top(fib_t);
+            Eigen::VectorXd bottom(fib_tb-fib_t);
+            for (int k = 0; k < fib_t; k++){
+                top(k) = pow(z, counts[k]);
+             }
+            bottom.fill(0);
+            Eigen::VectorXd ret(fib_tb);
+            ret << top, bottom;
+           return ret; 
+        }
+    else return mat*vec;
+ }
+double andrew_constant (int a , int b , int c, double z, std::vector<long> seqs){
 //    cout << "a = " << a << endl;//
 //    cout << "b = " << b << endl;//
 //    cout << "c = " << c << endl;//
@@ -149,49 +156,104 @@ double andrew_constant (int a , int b , int c){
     int fib_tb = fib (b+c+2);
     Eigen::VectorXd top(fib_t);
     Eigen::VectorXd bottom(fib_tb-fib_t);
-    top.fill(1);
+    std::vector<int> counts = generate_counts(seqs);
+    for (int k = 0; k < fib_t; k++){
+        top(k) = pow(z, counts[k]);
+    }
     bottom.fill(0);
+    Eigen::MatrixXd T_bc = generate_z_matrix_helper(b+c, seqs, z, counts);   
+    cout << "done matrix" << endl;
     Eigen::VectorXd vec(fib_tb);
-   vec << top, bottom; 
-    std::vector<long>seqs =  generate_linear_one_dim_sequences(b+c);  
-    vec = multiply_t_helper(b+c,seqs, vec, a);
+    vec << top, bottom; 
+    for (int l = 0; l < a; l++){
+        cout << " a - l = " << a- l << endl;
+        cout << "sum = " << vec.sum() << endl;
+        vec = T_bc*vec;
+    }
+    cout << "done first multiplication" << endl;
     // Remove one square
     int fib_t_new = fib(c+1);
     Eigen::VectorXd top_new(fib_t_new);
     Eigen::VectorXd bottom_new(fib_tb-fib_t_new);
-    top_new.fill(1);
+    for (int k = 0; k < fib_t_new; k++){
+        cout << "a - k = " << a-k << endl;
+        cout << "sum = " << vec.sum() << endl;
+        top_new(k) = pow(z, counts[k]);
+    }
+    cout << "done second multiplication" << endl;
     bottom_new.fill(0);
     Eigen::VectorXd vec_new(fib_tb);
-   vec_new << top_new, bottom_new;
-      vec_new = multiply_t_helper(b+c,seqs,vec_new, a);
+    vec_new << top_new, bottom_new;
+    for (int l = 0; l < a; l++){
+        vec_new = T_bc*vec_new;
+    }
     // Return eta approx (?)
+
     return vec.sum()/vec_new.sum();
- 
+} 
     //Creates an instance of ofstream, and opens example.txt
    //    // Outputs to example.txt through a_file
     //      a_file<<"This text will now be inside of example.txt";
     //        // Close the file stream explicitly
     //          a_file.close();}
-*/
 int main(int argc, char* argv[]) {
-    int a_end = atoi(argv[1]);
+    ofstream output ( "edge_a.txt" );
+    output << left << setw(5) << "a" << setw(5) << "b" << setw(5) <<"c" << setw(5) << "z"<< setw(18) << "entropy"  << endl;
+ 
+/*    int a_end = atoi(argv[1]);
     int b_end = atoi(argv[2]);
     int c_end = atoi(argv[3]);
-    ofstream output ( "gen.txt" );
-   
-    double z_end = atof(argv[4]);
-    for (int a = a_end; a >= 1; a--){
-        std::vector<long> seqs = generate_linear_one_dim_sequences(a);
-        std::vector<long> seqs_2 = generate_linear_one_dim_sequences(a+1);
-        output << left << setw(4) << "a" << setw(4) << "b" << setw(4) <<"c" << setw(4) << "z"<< setw(18) << "bc"  << endl;
- 
-        for (int b = b_end; b<=b_end; b++){
-            for (int c = c_end; c<=c_end; c++){
-               for (double z = z_end; z<=z_end; z*=2){ 
-                    output << setprecision(16) << left << setw(4) <<  a << setw(4) << b << setw(4) << c << setw(4) << z << setw(18) <<  brian_constant(a,b,c,z, seqs, seqs_2) << endl;
+       double z = atof(argv[4]);
+    for (int a = 16; a <= a_end; a++){
+               std::vector<long> seqs = generate_linear_one_dim_sequences(a);
+               std::vector<long> seqs_2 = generate_linear_one_dim_sequences(a+1);
+       for (int b = 35; b <= b_end; b++){
+            for (int c = 35; c <= c_end; c++){ 
+                double ret = brian_constant(a,b,c,z,seqs, seqs_2);
+                cout<< setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
+                output << setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
                 }
             }
         }
+*/ 
+    int a_end = atoi(argv[1]);
+    int bc_end = atoi(argv[2]);
+    double z = atof(argv[3]);
+    int c;
+    double ret;
+/*    for (int bc=16; bc<=bc_end; bc++){
+        std::vector<long> seqs = generate_linear_one_dim_sequences(bc);
+        cout << "done sequences" << endl;
+        for (int b = 1; b <= bc-2; b++){
+            c = bc - b;
+            for (int a = 35; a <= a_end; a++){
+                ret = andrew_constant(a,b,c,z,seqs);
+                cout<< setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
+                output << setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
+                }
+            }
+        }
+*/
+    for (int bc = 19 ; bc<=bc_end; bc++){
+        std::vector<long> seqs = generate_linear_one_dim_sequences(bc);
+        std::vector<int> counts = generate_counts(seqs);
+        Eigen::VectorXd top(seqs.size());
+        Eigen::VectorXd bot(seqs.size());
+        Eigen::MatrixXd mat =1/pow(z,counts[seqs.size()-1])*generate_z_matrix_helper(bc, seqs, z, counts);
+        for (int b = 8; b <= 10; b++){
+            c = bc - b;
+            for (int a = 0; a <= a_end; a++){
+               top = get_vec_a(mat,seqs,counts,top, a, b,  c, z);
+               cout << top.sum()<< endl;
+               bot = get_vec_a(mat,seqs,counts,bot,a,b+1,c-1,z);
+               cout << bot.sum() << endl;
+               ret = top.sum()/bot.sum();
+               cout<< setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
+               output << setprecision(16) << left << setw(5) <<  a << setw(5) << b << setw(5) << c << setw(5) << z << setw(18) << ret << endl;
+            } 
+        }
     }
-}
+
+    output.close();
+ }
 
