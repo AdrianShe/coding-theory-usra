@@ -1,6 +1,6 @@
 weights = [-1:0.001:10];
 weights = 2 .^ weights; 
-sizes = 2:15
+sizes = 2:10
 moments = cell(length(sizes), 1)
 
 for i=1:length(sizes)
@@ -8,9 +8,13 @@ for i=1:length(sizes)
 end
 
 for i=1:length(sizes)
+   printf('Generating sequences %d \n', i);
+   S = generate_sequences_numrep(sizes(i)); 
+   C = counter(S); 
+   A = generate_auxiliary_matrix(S, C, S, C);
    for j=1:length(weights) 
-     printf("%d %f \n", sizes(i), weights(j));
-     moments{i}(:,j) = compute_moments(weights(j), sizes(i), sizes(i)); 
+     printf('%d %f \n', sizes(i), weights(j));
+     moments{i}(:,j) = compute_moments(weights(j), A, C, sizes(i)); 
      fflush(stdout);
    end
 end

@@ -1,10 +1,8 @@
-function [moments] = compute_moments(z, n, num_its)
+function [moments] = compute_moments(z, A, C, num_its)
    %% z: weight
-   %% n: size of string
-   %% num_its: number of iterations desired
-   S = generate_sequences_numrep(n);
-   C = counter(S);
-   [M, v] = generate_moment_matrix(z, S, C);
+   %% A: an auxiliary matrix
+   %% C: a counter
+   [M, v] = generate_moment_matrix(z, A, C);
    
    for i=1:(num_its-1)
      v{3} = M{3} * v{1} + M{2} * v{2} + M{1} * v{3}; %% Compute second moment
