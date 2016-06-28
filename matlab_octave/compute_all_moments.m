@@ -1,7 +1,7 @@
 weights = [-10:0.001:10];
 weights = 2 .^ weights; 
-sizes = 2:10
-moments = cell(length(sizes), 1)
+sizes = 2:12;
+moments = cell(length(sizes), 1);
 
 for i=1:length(sizes)
   moments{i} = zeros(3, length(weights));

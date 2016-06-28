@@ -6,7 +6,7 @@ function [A] = generate_auxiliary_matrix(S, C, T, D)
    %% T: collection of sequences
    %% D: counter object for S
 
-   A = zeros(length(T), length(S));
+   A = -ones(length(T), length(S));
    if (length(S) == length(T)) %% Symmetric Case
       for i=1:length(S)
         for j=i:length(T)
@@ -15,16 +15,15 @@ function [A] = generate_auxiliary_matrix(S, C, T, D)
                 A(j,i) = C(j);
         end
        end
+      end
    
    else %% Non-symmetric case
         for i=1:length(T)
            for j=1:length(S)
                if (bitand(T(i), S(j)) == 0)
                   A(i,j) = D(i);
-               else
-                  A(i,j) = -Inf;
-               end
-            end
+                end
+          end
          end
    end
 end 

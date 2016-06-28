@@ -16,10 +16,13 @@ function [M, v] = generate_moment_matrix(z, A, C)
    endfor 
 
   %% Generate initial matrices 
+  idx = find(A == -1);
   M{1} = z .^ A;
+  M{1}(idx) = 0;
   M{2} = A  .* (z .^ (A - 1));
+  M{2}(idx) = 0;
   M{3} = ((A .* (A - 1)) ./ 2) .* (z .^ (A - 2));
-
+  M{3}(idx) = 0; 
 
   %% Generate initial vectors
   C = C';
