@@ -1,4 +1,4 @@
-weights = [-1:0.001:10];
+weights = [-10:0.001:10];
 weights = 2 .^ weights; 
 sizes = 2:10
 moments = cell(length(sizes), 1)

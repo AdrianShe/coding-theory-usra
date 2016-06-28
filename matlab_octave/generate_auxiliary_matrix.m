@@ -13,15 +13,16 @@ function [A] = generate_auxiliary_matrix(S, C, T, D)
          if (bitand(S(i), T(j)) == 0)
                 A(i,j) = C(i);
                 A(j,i) = C(j);
-         end
         end
-      end
+       end
    
    else %% Non-symmetric case
         for i=1:length(T)
            for j=1:length(S)
                if (bitand(T(i), S(j)) == 0)
                   A(i,j) = D(i);
+               else
+                  A(i,j) = -Inf;
                end
             end
          end
