@@ -87,6 +87,7 @@ Eigen::MatrixXd generate_z_matrix_expander_helper(int length, std::vector<long> 
     }
     return ret;
 }
+
 Eigen::MatrixXd generate_z_matrix_expander(int length, double z){
     std::vector<long> seqs = generate_linear_one_dim_sequences(length);
     std::vector<long> seqs_2 = generate_linear_one_dim_sequences(length+1);
@@ -98,11 +99,117 @@ Eigen::MatrixXd generate_z_matrix(int length, double z){
     return generate_z_matrix_helper(length,seqs ,z , generate_counts(seqs));
 }
 
+Eigen::MatrixXd generate_2z_matrix_helper(int length, std::vector<long> seqs, double z, std::vector<int> counts){
+    int size = seqs.size();
+    std::vector<double> z_counts;
+    z_counts.resize(size);
+    for (int k = 0; k<counts.size(); k++){
+        z_counts[k] = pow(z, counts[k]);
+    }
+    Eigen::MatrixXd ret(size, size);
+     ret.fill(0);
+    for (int i = 0; i < size; i++){
+        for (int j = 0; j < size; j++){
+             if ((seqs[i] & seqs[j]) == 0){
+                ret(i,j) = z_counts[i]*counts[i];    
+             }
+        }       
+    }
+//    cout << ret << endl;
+    return ret;
+} 
 
+Eigen::MatrixXd generate_2z_expander_matrix_helper(std::vector<long> seqs, std::vector<long> seqs_2, double z, std::vector<int> counts){  
+    int size = seqs.size();
+    int size_2 = seqs_2.size();
+    std::vector<double> z_counts;
+    z_counts.resize(size_2);
+    for (int k = 0; k < counts.size(); k++){
+        z_counts[k] = pow(z,counts[k]);
+    }
+    Eigen::MatrixXd ret(size_2, size);
+    ret.fill(0);
+    for (int i = 0; i < size_2; i++){
+        for (int j = 0; j < size; j++){
+             if ((seqs_2[i] & seqs[j]) == 0){
+                ret(i,j) =counts[i]*z_counts[i];    
+             }
+        }       
+    }
+    return ret;
+}
 
+Eigen::MatrixXd generate_2z_matrix(int length, double z){
+    std::vector<long> seqs = generate_linear_one_dim_sequences(length);
+    return generate_2z_matrix_helper(length, seqs, z, generate_counts(seqs));
+}
+
+double compute_density_helper(int a, int b, int c, std::vector<long> seqs, std::vector<long> seqs_2, double z, std::vector<int> counts, std::vector<int> counts_2){        
+    long double sum = 0;
+    int cap = a*b+(a+1)*c;
+    int size = seqs.size();
+    Eigen::VectorXd init(size); 
+    Eigen::VectorXd alt(size);
+    for (int i = 0; i < size; i++){
+        init(i) = pow(z, counts[i]);
+        alt(i) = pow(z,counts[i]) * counts[i];
+    }
+    double max_z = pow(z,counts_2[counts_2.size()-1]);
+    Eigen::VectorXd vec_new(size);
+    vec_new << init;
+    Eigen::MatrixXd S_a = 1/max_z*generate_2z_matrix_helper(a, seqs, z, counts);
+    Eigen::MatrixXd T_a = 1/max_z*generate_z_matrix_helper(a, seqs, z, counts);
+    Eigen::MatrixXd S_a1 = 1/max_z*generate_2z_matrix_helper(a+1, seqs_2, z, counts_2);
+    Eigen::MatrixXd T_a1 = 1/max_z*generate_z_matrix_helper(a+1, seqs_2, z, counts_2);
+    Eigen::MatrixXd E = 1/max_z*generate_z_matrix_expander_helper(a,seqs,seqs_2, z, counts_2);
+    Eigen::MatrixXd E_S = 1/max_z*generate_2z_expander_matrix_helper(seqs,seqs_2,z,counts_2); 
+  
+    for (int k = 1; k <= b+c; k++){
+        Eigen::VectorXd vec(size);    
+        // 2 in initial column!!
+        if (k == 1){
+            vec << alt;
+        } else{
+            vec << init; 
+        }
+        // upto b columns
+        for (int j = 2; j<=b; j++){
+            if (j == k){
+                vec = S_a*vec;
+            } else {
+                vec = T_a*vec; 
+            }
+        }
+        // 2 in expander column!!
+        if (k==b+1){
+            vec = E_S*vec;
+        } else{ 
+            vec = E*vec;
+        }
+        // upto b+c columns
+        for (int j = b+2; j<=b+c; j++){
+            if (j ==  k){
+                vec = S_a1*vec;
+            }else {
+                vec = T_a1*vec;
+            }
+        }
+        sum+=vec.sum();
+    }
+        //compute mass
+        for (int k =2; k <= b; k++){
+            vec_new = T_a*vec_new;
+        }
+        vec_new=E*vec_new;
+        for (int k = b+2; k <= b+c; k++){
+            vec_new = T_a1*vec_new;
+        }
+        double denom = cap*vec_new.sum();
+        return sum/denom;
+}
                 
                      
-double brian_constant(int a , int b , int c, double z, std::vector<long> seqs, std::vector<long> seqs_2  ){
+double brian_constant(int a , int b , int c, double z, std::vector<long> seqs, std::vector<long> seqs_2){
     int size = seqs.size();
     int size_2 = seqs_2.size();
     Eigen::VectorXd vec(size);
@@ -131,6 +238,7 @@ double brian_constant(int a , int b , int c, double z, std::vector<long> seqs, s
   //  cout << "bot = " << vec_b_new.sum() << endl;
        return vec_t_new.sum()/vec_b_new.sum();
 }
+
 Eigen::VectorXd get_vec_a(Eigen::MatrixXd mat,std::vector<long> seqs,  std::vector<int> counts, Eigen::VectorXd vec, int a,int b, int c, double z){
     if (a==0){
         int fib_tb = fib (b+c+2); 
@@ -147,6 +255,7 @@ Eigen::VectorXd get_vec_a(Eigen::MatrixXd mat,std::vector<long> seqs,  std::vect
         }
     else return mat*vec;
  }
+
 double andrew_constant (int a , int b , int c, double z, std::vector<long> seqs){
 //    cout << "a = " << a << endl;//
 //    cout << "b = " << b << endl;//
@@ -196,11 +305,84 @@ double andrew_constant (int a , int b , int c, double z, std::vector<long> seqs)
     //      a_file<<"This text will now be inside of example.txt";
     //        // Close the file stream explicitly
     //          a_file.close();}
+//method to compute density of L_shape
+int main(int argc, char* argv[]){
+    int a_end = atoi(argv[1]);
+    int b_end = atoi(argv[2]);
+    int c_end = atoi(argv[3]);
+    double z_end = atof(argv[4]);
+    for (int a = 1; a <=a_end; a++){
+        string name = std::to_string(a);
+        ofstream output (string("density_a="+name+".txt").c_str());
+        output << left << setw(5) << "a" <<  setw(5) <<"b" <<  setw(5) << "c" << setw(5) << "z" << setw(30) << "density" << endl; 
+        std::vector<long> seqs = generate_linear_one_dim_sequences(a);
+        std::vector<long> seqs_2 = generate_linear_one_dim_sequences(a+1);
+        std::vector<int> counts = generate_counts(seqs);
+        std::vector<int> counts_2 = generate_counts(seqs_2);
+        for (int b = 1; b<=b_end; b++){
+            for (int c = 2; c<=c_end; c++){
+                for (double z = 0.5; z<=z_end; z*=2){
+                    double density =  compute_density_helper(a, b, c, seqs, seqs_2, z, counts,counts_2);
+                    cout << setprecision(18) << left << setw(5) << a << setw(5) << b << setw(5) << c << setw(5) << z << setw(30) << density << endl;
+                    output << setprecision(18) << left << setw(5) << a << setw(5) << b << setw(5) << c << setw(5) << z << setw(30) << density <<endl;
+                }
+             }
+        }
+    }
+}
+
+/* METHODS TO COMPUTE DENSITY OF SQUARE
+int main(int argc, char* argv[]){
+    int length = atoi(argv[1]);
+    double z_end = atof(argv[2]);
+    ofstream output ( "2.txt" );
+    output << left << setw(5) << "area" << setw(5) << "z"<< setw(30) << "moment" << setw(30) << "density" << endl;
+ 
+    for (int z = 0; z <=z_end; z++){
+        long double sum = 0;
+        std::vector<long> seqs = generate_linear_one_dim_sequences(length);
+        std::vector<int> counts = generate_counts(seqs); 
+        int fib_tb = fib(length+2);
+        Eigen::VectorXd vec(fib_tb);
+        Eigen::VectorXd init(fib_tb); 
+        Eigen::VectorXd alt(fib_tb);
+        for (int i = 0; i < fib_tb; i++){
+            init(i) = pow(z, counts[i]);
+            alt(i) = pow(z,counts[i]) * counts[i];
+        }
+        Eigen::VectorXd vec_new(fib_tb);
+        vec_new << init;
+        Eigen::MatrixXd S = generate_2z_matrix_helper(length, seqs, z, counts);
+        Eigen::MatrixXd T = generate_z_matrix_helper(length, seqs, z, counts);
+        for (int k = 1; k < length; k++){
+            vec << init;
+            vec_new = T*vec_new;
+            alt = T*alt;
+            for (int j = 1; j < k; j++){
+                vec = T*vec;
+            }
+            vec = S*vec;
+            for (int l = 1; l < length-k; l++){
+                vec = T*vec;
+            }
+            sum+=vec.sum(); 
+        }
+        sum+=alt.sum();
+        output << setprecision(16) << left << setw(5) <<  length*length << setw(5) << z << setw(30) << sum << setw(30) << sum/vec_new.sum()<< endl;
+        cout << setprecision(16) << left << setw(5) <<  length*length << setw(5) << z << setw(30) << sum << setw(30) <<  sum/vec_new.sum()<< endl;
+ 
+    }
+    
+    output.close();
+}
+*/
+
+/* METHODS TO COMPUTE ANDREW AND BRIAN CONSTANT
 int main(int argc, char* argv[]) {
-    ofstream output ( "edge_a.txt" );
+    ofstream output ( "out.txt" );
     output << left << setw(5) << "a" << setw(5) << "b" << setw(5) <<"c" << setw(5) << "z"<< setw(18) << "entropy"  << endl;
  
-/*    int a_end = atoi(argv[1]);
+//    int a_end = atoi(argv[1]);
     int b_end = atoi(argv[2]);
     int c_end = atoi(argv[3]);
        double z = atof(argv[4]);
@@ -215,13 +397,13 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-*/ 
+ 
     int a_end = atoi(argv[1]);
     int bc_end = atoi(argv[2]);
     double z = atof(argv[3]);
     int c;
     double ret;
-/*    for (int bc=16; bc<=bc_end; bc++){
+//    for (int bc=16; bc<=bc_end; bc++){
         std::vector<long> seqs = generate_linear_one_dim_sequences(bc);
         cout << "done sequences" << endl;
         for (int b = 1; b <= bc-2; b++){
@@ -233,14 +415,14 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-*/
-    for (int bc = 19 ; bc<=bc_end; bc++){
+//
+    for (int bc = 3 ; bc<=bc_end; bc++){
         std::vector<long> seqs = generate_linear_one_dim_sequences(bc);
         std::vector<int> counts = generate_counts(seqs);
         Eigen::VectorXd top(seqs.size());
         Eigen::VectorXd bot(seqs.size());
         Eigen::MatrixXd mat =1/pow(z,counts[seqs.size()-1])*generate_z_matrix_helper(bc, seqs, z, counts);
-        for (int b = 8; b <= 10; b++){
+        for (int b = 1; b <= bc-2; b++){
             c = bc - b;
             for (int a = 0; a <= a_end; a++){
                top = get_vec_a(mat,seqs,counts,top, a, b,  c, z);
@@ -256,4 +438,4 @@ int main(int argc, char* argv[]) {
 
     output.close();
  }
-
+*/

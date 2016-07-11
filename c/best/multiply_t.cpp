@@ -22,7 +22,8 @@ using namespace Eigen;
 
 Eigen::VectorXd multiply_t(int length, Eigen::VectorXd vec){
     return multiply_t_helper(length, generate_linear_one_dim_sequences(length), vec, 1);
-}    
+}
+
 Eigen::VectorXd multiply_t_helper(int length, std::vector<long> seqs, Eigen::VectorXd vec, int times){    
     int size = seqs.size();
     Eigen::VectorXd ret(size);
@@ -87,6 +88,7 @@ double brian_constant(int a , int b , int c){
     keep_vec = multiply_t_helper(a+1,seqs_2,keep_vec, c-2);
     return new_vec.sum()/keep_vec.sum();
 }
+
 double andrew_constant (int a , int b , int c){
 /*    cout << "a = " << a << endl;//
     cout << "b = " << b << endl;//
