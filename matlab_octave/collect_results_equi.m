@@ -1,1 +1,1 @@
-res = compute_checkboard_main(2:10, 1:20, 1:20,  2 .^ [0:10]);
+res = compute_checkboard_main(13:15, 20:40, 20:40, 10);
