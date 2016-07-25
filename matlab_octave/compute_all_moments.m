@@ -1,6 +1,6 @@
 weights = [-10:0.01:10];
 weights = 2 .^ weights; 
-sizes = 2:15;
+sizes = 3;
 moments = cell(length(sizes), 1);
 
 for i=1:length(sizes)
@@ -20,5 +20,5 @@ for i=1:length(sizes)
       %%  save try_this.txt moments
      %% end
    end
-   save moments_finer.txt moments
+  % save moments_finer.txt moments
 end
