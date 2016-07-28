@@ -2,16 +2,16 @@
 %% from finite dimensional system.
 
 %load 2_16_-10_10_hundredth_moments.txt
-width = 101;
+width = 401;
 %load checkboard_moments.txt
-approx_a = zeros(12, width);
-approx_kappa = zeros(12, width);
-approx_rho = zeros(12,width);
+approx_a = zeros(9, width);
+approx_kappa = zeros(9, width);
+approx_rho = zeros(9, width);
 moment = moments
 
 %moment = checkboard_1
 
-for n=6:13
+for n=6:14
 	matrix = [1 n^2 n; 1 (n-2)^2 n-1; 1 (n-4)^2 n-2]
         fflush(stdout)
 	approx = zeros(3, width);

@@ -1,10 +1,10 @@
-weights = [-10:0.2:10];
+weights = [-10:0.05:10];
 weights = 2 .^ weights; 
 sizes = 2:15;
 moments = cell(length(sizes), 1);
 
 for i=1:length(sizes)
-  moments{i} = zeros(3, length(weights));
+  moments{i} = zeros(1, length(weights));
 end
 
 for i=1:length(sizes)
@@ -14,7 +14,7 @@ for i=1:length(sizes)
    A = generate_auxiliary_matrix(S, C, S, C);
    for j=1:length(weights) 
      printf('%d %f \n', sizes(i), weights(j));
-     moments{i}(:,j) = compute_moments_torus(weights(j), A, C, sizes(i)); 
+     moments{i}(j) = compute_moments_torus(weights(j), A, C, sizes(i)); 
      fflush(stdout);
    end
 end
