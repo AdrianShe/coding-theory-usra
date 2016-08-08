@@ -11,12 +11,12 @@ function [results] = compute_checkboard_main(a, b, c, z)
    S = generate_sequences_numrep(a(l)+1);
    C = counter(S); 
    A = generate_auxiliary_matrix(S, C, S, C);
-   init = ones(length(S), 1);
+ 
  
    for i=1:length(z)
          matrix = zeros(length(b), length(c));
          M = generate_z_matrix(z(i), A);
-       
+         init = z(i) .^ C';     
  	 for j=1:length(b)
             for k=1:length(c)
                   [top, bottom] = generate_edges(a(l), b(j), c(k));

@@ -1,6 +1,6 @@
-free_results = cell(3,1);
+free_results = cell(10,1);
 
-for a=13:15
+for a=1:10
    seq = generate_sequences_numrep(a);
    seq2 = generate_sequences_numrep(a+1);
    C = counter(seq);
@@ -8,21 +8,21 @@ for a=13:15
    A = generate_auxiliary_matrix(seq, C, seq, C);
    B = generate_auxiliary_matrix(seq2, D, seq2, D);
    E = generate_auxiliary_matrix(seq, C, seq2, D); 
-   A = generate_z_matrix(10, A);
-   B = generate_z_matrix(10, B);
-   E = generate_z_matrix(10, E);   
+   A = generate_z_matrix(1, A);
+   B = generate_z_matrix(1, B);
+   E = generate_z_matrix(1, E);   
    printf('Finishing generating matrix \n');
    fflush(stdout);
 
-   vals = zeros(21, 21);
-   init = 10 .^ (C'); 
+   vals = zeros(20, 20);
+   init = ones(length(C), 1); 
 
-   for i=20:40
-    for j=20:40
+   for i=1:20
+    for j=1:20
         fprintf('%d %d %d \n', a, i, j); 
-   	vals(i-19, j-19) = brians_constant(A, B, E, init , i, j, 10 ^ max(C));
+   	vals(i, j) = brians_constant(A, B, E, init , i, j);
         fflush(stdout);
     end
    end
-   free_results{a-12} = vals;
+   free_results{a} = vals;
 end
